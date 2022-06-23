@@ -10,4 +10,4 @@ def dateArrange(data):
         epochDate = datetime(int(splitDate[0]),int(splitDate[1]),int(splitDate[2]),0,0).timestamp()
         epochDates.append(epochDate)
     data['Date'] = epochDates
-    print(data)
+    #print(data)
