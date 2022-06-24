@@ -3,6 +3,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Lasso
 from sklearn.metrics import r2_score
 
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
 stock_ticker = input('Enter Ticker To Scrape: ').upper()
 
 stock_data = dataScraper(stock_ticker)
