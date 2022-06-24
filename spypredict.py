@@ -20,7 +20,6 @@ lasso = Lasso(alpha=1, max_iter=max_iter, tol=tol)
 test_size = 0.1
 
 print('\nModel = ' + str(lasso))
-print('R2 = 0.99627448128')
 #print('R2 = ' + str(r2_score_lasso))
 print('\n~ ' + stock_ticker + ' Next Day Price Predictions ~\n')
 
