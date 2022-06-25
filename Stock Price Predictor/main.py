@@ -59,6 +59,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def predict(self): # predict function
+        global ticker
         ticker = self.lineEdit.text()
         predictor(ticker)
         self.window = QtWidgets.QMainWindow()
