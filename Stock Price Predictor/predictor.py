@@ -1,5 +1,6 @@
 def warn(*args, **kwargs):
     pass
+from re import I
 import warnings
 warnings.warn = warn
 
@@ -9,8 +10,11 @@ from sklearn.linear_model import Lasso
 from sklearn.metrics import r2_score
 
 #stock_ticker = input('Enter Ticker To Scrape: ').upper()
+prediction_list = []
 
 def predictor(stock_ticker):
+    global prediction_list
+    prediction_list = []
     stock_data = dataScraper(stock_ticker)
 
     alpha = 0.1
@@ -31,9 +35,6 @@ def predictor(stock_ticker):
         'Close (Adjusted)': stock_data.iloc[1: , :]['Adj Close']
     }
     sample = stock_data.iloc[-1:, :]
-
-    global prediction_list
-    prediction_list = []
 
     for i in y:
         X_train, X_test, y_train, y_test = train_test_split(X, y[i], test_size=test_size)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>332</width>
-    <height>182</height>
+    <height>163</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,6 +48,9 @@
       <property name="text">
        <string>Test1</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -70,6 +73,9 @@
      <widget class="QLineEdit" name="lineEdit_3">
       <property name="text">
        <string>Test2</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -94,6 +100,9 @@
       <property name="text">
        <string>Test3</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -107,7 +116,7 @@
      <x>0</x>
      <y>0</y>
      <width>332</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
