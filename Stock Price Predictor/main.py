@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def predict(self): # predict function
+    def predict(self): # predict function, LEARN ABOOUT CLASSES@@@
         global ticker
         ticker = self.lineEdit.text()
         predictor(ticker)

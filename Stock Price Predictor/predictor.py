@@ -26,7 +26,7 @@ def predictor(stock_ticker):
 
     print('\nModel = ' + str(lasso))
     #print('R2 = ' + str(r2_score_lasso))
-    print('\n~ ' + stock_ticker + ' Next Day Price Predictions ~\n')
+    #print('\n~ ' + stock_ticker.upper() + ' Next Day Price Predictions ~\n')
 
     X = stock_data.iloc[:-1 , :]
     y = {
@@ -43,4 +43,4 @@ def predictor(stock_ticker):
         r2_score_lasso = r2_score(np.array(y_test), y_pred_lasso.predict(np.array(X_test)))
         prediction = y_pred_lasso.predict(np.array(sample))
         prediction_list.append(prediction)
-        print(i + ' - ' + str(prediction) + '\n')
+        #print(i + ' - ' + str(prediction) + '\n')

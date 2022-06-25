@@ -72,7 +72,7 @@ class Ui_Predictions(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, MainWindow): # predict function, LEARN ABOOUT CLASSES@@@
         from predictor import prediction_list
         heading = 'Next Day Price Predictions'
         _translate = QtCore.QCoreApplication.translate
