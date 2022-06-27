@@ -17,7 +17,7 @@ lasso_settings = {
     'tol': 0.0017
 }
 
-#default_iter = 1000
+model_selection = ['Lasso']
 
 class Ui_Model_Settings(object):  
     def setupUi(self, MainWindow):
@@ -79,7 +79,7 @@ class Ui_Model_Settings(object):
     def retranslateUi(self, MainWindow):
         global lasso_settings
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Model Settings"))
         self.label.setText(_translate("MainWindow", "Model:"))
         self.comboBox.setItemText(0, _translate("MainWindow", "Lasso"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Test"))
@@ -97,22 +97,26 @@ class Ui_Model_Settings(object):
         self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
 
     def model_change(self, MainWindow):
-        model_selection = self.comboBox.currentText() # current model selection #######
-        if model_selection == 'Lasso':
+        global model_selection
+        model_selection[0] = self.comboBox.currentText() # current model selection #######
+        if model_selection[0] == 'Lasso':
             #self.alphaUi(MainWindow)
             print('Lasso UI')
-        if model_selection == 'Test':
+        if model_selection[0] == 'Test':
             print('Change UI!!!@@@')
     
     def apply_settings(self):
-        model_selection = self.comboBox.currentText() # current model selection #######
-        if model_selection == 'Lasso':        
+        global model_selection
+        model_selection[0] = self.comboBox.currentText() # current model selection #######
+        if model_selection[0] == 'Lasso':        
             global lasso_settings
             lasso_settings['default_iter'] = self.lineEdit.text()
             lasso_settings['alpha'] = self.lineEdit_2.text()
             lasso_settings['tol'] = self.lineEdit_3.text()
+            model_selection[0] == 'Lasso'
             self.settingsapplied()
-        if model_selection == 'Test':
+        if model_selection[0] == 'Test':
+            model_selection[0] == 'Test'
             print('Nothing Changed')
 
         #print(self.comboBox.currentText()) # read combobox selection

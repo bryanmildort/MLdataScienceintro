@@ -36,13 +36,13 @@ class Ui_SettingsApplied(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         MainWindow.setWindowModality(QtCore.Qt.ApplicationModal)
-        
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Complete"))
         self.label.setText(_translate("MainWindow", "Settings Applied!"))
 
 if __name__ == "__main__":
