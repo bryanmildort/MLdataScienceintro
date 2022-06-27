@@ -81,7 +81,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Enter Ticker To Scrape:"))
         self.pushButton.setText(_translate("MainWindow", "Predict!"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.actionSettings.setText(_translate("MainWindow", "Settings"))
+        self.actionSettings.setText(_translate("MainWindow", "Model"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
 
 

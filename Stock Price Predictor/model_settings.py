@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from settings_applied import Ui_SettingsApplied
 
 lasso_settings = {
     'default_iter': 1000,
@@ -32,7 +33,6 @@ class Ui_Model_Settings(object):
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.setItemText(2, "")
@@ -83,25 +83,38 @@ class Ui_Model_Settings(object):
         self.label.setText(_translate("MainWindow", "Model:"))
         self.comboBox.setItemText(0, _translate("MainWindow", "Lasso"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Test"))
-        self.label_2.setText(_translate("MainWindow", "Iterations:"))
+        self.label_2.setText(_translate("MainWindow", "Max Iterations:"))
         self.lineEdit.setText(str(lasso_settings['default_iter']))
-        # self.comboBox.currentTextChanged.connect(self.iter_change) # changing model
         self.pushButton.setText(_translate("MainWindow", "Done"))
         self.pushButton.clicked.connect(self.apply_settings) # apply settings
         MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) # Modal always on top
-        # model_selection = self.comboBox.currentText # current model selection #######
         self.label_3.setText(_translate("MainWindow", "Alpha:"))
         self.label_4.setText(_translate("MainWindow", "Tolerance:"))
         self.pushButton.setText(_translate("MainWindow", "Done"))
         self.lineEdit.setText(str(lasso_settings['default_iter']))
         self.lineEdit_2.setText(str(lasso_settings['alpha']))
         self.lineEdit_3.setText(str(lasso_settings['tol']))
+        self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
+
+    def model_change(self, MainWindow):
+        model_selection = self.comboBox.currentText() # current model selection #######
+        if model_selection == 'Lasso':
+            #self.alphaUi(MainWindow)
+            print('Lasso UI')
+        if model_selection == 'Test':
+            print('Change UI!!!@@@')
     
-    def apply_settings(self, MainWindow):
-        global lasso_settings
-        lasso_settings['default_iter'] = self.lineEdit.text()
-        lasso_settings['alpha'] = self.lineEdit_2.text()
-        print('button pressed')
+    def apply_settings(self):
+        model_selection = self.comboBox.currentText() # current model selection #######
+        if model_selection == 'Lasso':        
+            global lasso_settings
+            lasso_settings['default_iter'] = self.lineEdit.text()
+            lasso_settings['alpha'] = self.lineEdit_2.text()
+            lasso_settings['tol'] = self.lineEdit_3.text()
+            self.settingsapplied()
+        if model_selection == 'Test':
+            print('Nothing Changed')
+
         #print(self.comboBox.currentText()) # read combobox selection
         #self.alphaUi(MainWindow) # change model ui
         
@@ -109,7 +122,6 @@ class Ui_Model_Settings(object):
         _translate = QtCore.QCoreApplication.translate
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setObjectName("label_3")
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_2.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
@@ -121,9 +133,13 @@ class Ui_Model_Settings(object):
         self.gridLayout.addWidget(self.pushButton, 3, 1, 1, 1)
         self.label_3.setText(_translate("MainWindow", "Alpha:"))
         self.pushButton.setText(_translate("MainWindow", "Done"))
+
+    def settingsapplied(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_SettingsApplied()
+        self.ui.setupUi(self.window)
+        self.window.show()
         
-
-
 
 if __name__ == "__main__":
     import sys
