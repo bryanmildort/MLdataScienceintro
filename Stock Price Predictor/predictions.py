@@ -73,10 +73,11 @@ class Ui_Predictions(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow): # predict function, LEARN ABOOUT CLASSES@@@
-        from predictor import prediction_list
-        heading = 'Next Day Price Predictions'
+        from predictor import prediction_list, typed_ticker
+        #from main import ticker
+        heading = str(typed_ticker[0]).upper() + ' Next Day Price Predictions'
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Price Predictions"))
+        MainWindow.setWindowTitle(_translate("MainWindow", (str(typed_ticker[0].upper() + " Predictions"))))
         self.label_4.setText(_translate("MainWindow", heading))
         self.label.setText(_translate("MainWindow", "High:"))
         self.lineEdit.setText(_translate("MainWindow", str(prediction_list[0])))
@@ -84,6 +85,8 @@ class Ui_Predictions(object):
         self.lineEdit_3.setText(_translate("MainWindow", str(prediction_list[1])))
         self.label_2.setText(_translate("MainWindow", "Close (Adjusted):"))
         self.lineEdit_2.setText(_translate("MainWindow", str(prediction_list[2])))
+        MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) #Modal always on top
+
 
 if __name__ == "__main__":
     import sys
@@ -93,3 +96,5 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+    

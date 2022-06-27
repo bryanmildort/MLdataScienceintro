@@ -9,18 +9,26 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Lasso
 from sklearn.metrics import r2_score
 
+from model_settings import lasso_settings
+
 #stock_ticker = input('Enter Ticker To Scrape: ').upper()
 prediction_list = []
+typed_ticker = [] 
 
 def predictor(stock_ticker):
     global prediction_list
+    global ticker
+    global lasso_settings
+    
     prediction_list = []
+    ticker = stock_ticker
+    typed_ticker.append(ticker)
     stock_data = dataScraper(stock_ticker)
 
-    alpha = 0.1
-    tol = 0.0017
-    max_iter = 1000
-    lasso = Lasso(alpha=1, max_iter=max_iter, tol=tol)
+    alpha = float(lasso_settings['alpha'])
+    tol = float(lasso_settings['tol'])
+    max_iter = int(lasso_settings['default_iter'])
+    lasso = Lasso(alpha=alpha, max_iter=max_iter, tol=tol)
 
     test_size = 0.1
 
