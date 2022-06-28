@@ -55,7 +55,6 @@ class Ui_Model_Settings(object):
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setObjectName("label_4")
         self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
-        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
         self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_3.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
         self.lineEdit_3.setObjectName("lineEdit_3")
@@ -97,12 +96,23 @@ class Ui_Model_Settings(object):
         self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
 
     def model_change(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
         global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
         if model_selection[0] == 'Lasso':
-            #self.alphaUi(MainWindow)
+            self.label_4 = QtWidgets.QLabel(self.centralwidget)
+            self.label_4.setObjectName("label_4")
+            self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+            self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
+            self.lineEdit_3.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
+            self.lineEdit_3.setObjectName("lineEdit_3")
+            self.gridLayout.addWidget(self.lineEdit_3, 3, 1, 1, 1)
+            self.label_4.setText(_translate("MainWindow", "Tolerance:"))
+            self.lineEdit_3.setText(str(lasso_settings['tol']))
             print('Lasso UI')
         if model_selection[0] == 'Test':
+            self.lineEdit_3.deleteLater()
+            self.label_4.deleteLater()
             print('Change UI!!!@@@')
     
     def apply_settings(self):
