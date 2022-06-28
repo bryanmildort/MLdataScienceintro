@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.actionSettings = QtWidgets.QAction(MainWindow)
         self.actionSettings.setObjectName("actionSettings")
-        self.actionSettings.triggered.connect(self.model_settings) # open model settings
+        self.actionSettings.triggered.connect(self.modelSettings) # open model settings
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
         self.menuFile.addAction(self.actionSettings)
@@ -69,14 +69,19 @@ class Ui_MainWindow(object):
         self.ui.setupUi(self.window)
         self.window.show()
 
-    def model_settings(self):
+    def modelSettings(self):
         if model_selection[0] == 'Lasso':
             self.window = QtWidgets.QMainWindow()
             self.ui = Ui_Model_Settings()
             self.ui.setupUi(self.window)
             self.window.show()
         if model_selection[0] == 'Test':
-            print('Works as Expected')
+            self.window = QtWidgets.QMainWindow()
+            self.ui = Ui_Model_Settings()
+            self.ui.setupUi(self.window)
+            self.ui.lineEdit_3.deleteLater()
+            self.ui.label_4.deleteLater()
+            self.window.show()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

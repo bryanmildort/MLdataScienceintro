@@ -94,8 +94,10 @@ class Ui_Model_Settings(object):
         self.lineEdit_2.setText(str(lasso_settings['alpha']))
         self.lineEdit_3.setText(str(lasso_settings['tol']))
         self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
+        if model_selection[0] == 'Test':
+            self.comboBox.setCurrentText('Test')
 
-    def model_change(self, MainWindow):
+    def model_change(self):
         _translate = QtCore.QCoreApplication.translate
         global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
@@ -109,11 +111,9 @@ class Ui_Model_Settings(object):
             self.gridLayout.addWidget(self.lineEdit_3, 3, 1, 1, 1)
             self.label_4.setText(_translate("MainWindow", "Tolerance:"))
             self.lineEdit_3.setText(str(lasso_settings['tol']))
-            print('Lasso UI')
         if model_selection[0] == 'Test':
             self.lineEdit_3.deleteLater()
             self.label_4.deleteLater()
-            print('Change UI!!!@@@')
     
     def apply_settings(self):
         global model_selection
@@ -127,7 +127,7 @@ class Ui_Model_Settings(object):
             self.settingsapplied()
         if model_selection[0] == 'Test':
             model_selection[0] == 'Test'
-            print('Nothing Changed')
+            self.settingsapplied()
 
         #print(self.comboBox.currentText()) # read combobox selection
         #self.alphaUi(MainWindow) # change model ui
