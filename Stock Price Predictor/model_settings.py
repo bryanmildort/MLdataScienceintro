@@ -17,6 +17,13 @@ lasso_settings = {
     'tol': 0.0017
 }
 
+elastic_settings = {
+    'default_iter': 1000,
+    'alpha': 0.1,
+    'tol': 0.0017,
+    'l1_ratio': 0.7
+}
+
 model_selection = ['Lasso']
 
 class Ui_Model_Settings(object):  
@@ -75,6 +82,7 @@ class Ui_Model_Settings(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
     def retranslateUi(self, MainWindow):
         global lasso_settings
         _translate = QtCore.QCoreApplication.translate
@@ -84,35 +92,69 @@ class Ui_Model_Settings(object):
         self.comboBox.setItemText(1, _translate("MainWindow", "ElasticNet"))
         self.label_2.setText(_translate("MainWindow", "Max Iterations:"))
         self.lineEdit.setText(str(lasso_settings['default_iter']))
-        self.pushButton.setText(_translate("MainWindow", "Done"))
         self.pushButton.clicked.connect(self.apply_settings) # apply settings
         MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) # Modal always on top
         self.label_3.setText(_translate("MainWindow", "Alpha:"))
         self.label_4.setText(_translate("MainWindow", "Tolerance:"))
-        self.pushButton.setText(_translate("MainWindow", "Done"))
-        self.lineEdit.setText(str(lasso_settings['default_iter']))
-        self.lineEdit_2.setText(str(lasso_settings['alpha']))
-        self.lineEdit_3.setText(str(lasso_settings['tol']))
-        self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
-        self.comboBox.setCurrentText(model_selection[0])
+        self.pushButton.setText(_translate("MainWindow", "Apply"))
+
+        if model_selection[0] == 'Lasso':
+            self.lineEdit.setText(str(lasso_settings['default_iter']))
+            self.lineEdit_2.setText(str(lasso_settings['alpha']))
+            self.lineEdit_3.setText(str(lasso_settings['tol']))
+
+
+        if model_selection[0] == 'ElasticNet':
+            self.comboBox.setCurrentText('ElasticNet')
+            self.label_5 = QtWidgets.QLabel(self.centralwidget)
+            self.label_5.setObjectName("label_5")
+            self.gridLayout.addWidget(self.label_5, 4, 0 , 1, 1)
+            self.lineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
+            self.lineEdit_4.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
+            self.lineEdit_4.setObjectName("lineEdit_4")
+            self.gridLayout.addWidget(self.lineEdit_4, 4, 1, 1, 1)
+            self.label_5.setText(_translate("MainWindow", "L1 Ratio"))
+            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+            self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
+            self.pushButton.setText(_translate("MainWindow", "Apply"))
+            self.lineEdit.setText(str(elastic_settings['default_iter']))
+            self.lineEdit_2.setText(str(elastic_settings['alpha']))
+            self.lineEdit_3.setText(str(elastic_settings['tol']))
+            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+        
+        self.comboBox.currentTextChanged.connect(self.model_change) # trigger from selecting new model
 
     def model_change(self):
         _translate = QtCore.QCoreApplication.translate
         global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
         if model_selection[0] == 'Lasso':
-            self.label_4 = QtWidgets.QLabel(self.centralwidget)
-            self.label_4.setObjectName("label_4")
-            self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
-            self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-            self.lineEdit_3.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
-            self.lineEdit_3.setObjectName("lineEdit_3")
-            self.gridLayout.addWidget(self.lineEdit_3, 3, 1, 1, 1)
-            self.label_4.setText(_translate("MainWindow", "Tolerance:"))
+            self.lineEdit.setText(str(lasso_settings["default_iter"]))
+            self.lineEdit_2.setText(str(lasso_settings['alpha']))
             self.lineEdit_3.setText(str(lasso_settings['tol']))
+            self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
+            if self.lineEdit_4.isVisible():
+                self.lineEdit_4.deleteLater()
+                self.label_5.deleteLater()
+                self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
+                self.pushButton.setText(_translate("MainWindow", "Apply"))
         if model_selection[0] == 'ElasticNet':
-            self.lineEdit_3.deleteLater()
-            self.label_4.deleteLater()
+            self.lineEdit.setText(str(elastic_settings["default_iter"]))
+            self.lineEdit_2.setText(str(elastic_settings['alpha']))
+            self.lineEdit_3.setText(str(elastic_settings['tol']))
+            self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
+            self.label_5 = QtWidgets.QLabel(self.centralwidget)
+            self.label_5.setObjectName("label_5")
+            self.gridLayout.addWidget(self.label_5, 4, 0 , 1, 1)
+            self.lineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
+            self.lineEdit_4.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
+            self.lineEdit_4.setObjectName("lineEdit_4")
+            self.gridLayout.addWidget(self.lineEdit_4, 4, 1, 1, 1)
+            self.label_5.setText(_translate("MainWindow", "L1 Ratio"))
+            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+            self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
+            self.pushButton.setText(_translate("MainWindow", "Apply"))
+
     
     def apply_settings(self):
         global model_selection
@@ -125,27 +167,13 @@ class Ui_Model_Settings(object):
             model_selection[0] == 'Lasso'
             self.settingsapplied()
         if model_selection[0] == 'ElasticNet':
+            global elastic_settings
+            elastic_settings['default_iter'] = self.lineEdit.text()
+            elastic_settings['alpha'] = self.lineEdit_2.text()
+            elastic_settings['tol'] = self.lineEdit_3.text()
+            elastic_settings['l1_ratio'] = self.lineEdit_4.text()
             model_selection[0] == 'ElasticNet'
             self.settingsapplied()
-
-        #print(self.comboBox.currentText()) # read combobox selection
-        #self.alphaUi(MainWindow) # change model ui
-        
-    def alphaUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setObjectName("label_3")
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setInputMethodHints(QtCore.Qt.ImhPreferNumbers)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.lineEdit_2, 2, 1, 1, 1)
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setDefault(False)
-        self.pushButton.setObjectName("pushButton")
-        self.gridLayout.addWidget(self.pushButton, 3, 1, 1, 1)
-        self.label_3.setText(_translate("MainWindow", "Alpha:"))
-        self.pushButton.setText(_translate("MainWindow", "Done"))
 
     def settingsapplied(self):
         self.window = QtWidgets.QMainWindow()

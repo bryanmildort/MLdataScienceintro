@@ -70,18 +70,10 @@ class Ui_MainWindow(object):
         self.window.show()
 
     def modelSettings(self):
-        if model_selection[0] == 'Lasso':
-            self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_Model_Settings()
-            self.ui.setupUi(self.window)
-            self.window.show()
-        if model_selection[0] == 'ElasticNet':
-            self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_Model_Settings()
-            self.ui.setupUi(self.window)
-            self.ui.lineEdit_3.deleteLater()
-            self.ui.label_4.deleteLater()
-            self.window.show()
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_Model_Settings()                
+        self.ui.setupUi(self.window)
+        self.window.show()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
