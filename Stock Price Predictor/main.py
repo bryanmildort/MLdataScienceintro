@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from predictions import Ui_Predictions
 from model_settings import *
+from about import *
 from predictor import *
 
 class Ui_MainWindow(object):
@@ -52,6 +53,7 @@ class Ui_MainWindow(object):
         self.actionSettings.triggered.connect(self.modelSettings) # open model settings
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
+        self.actionAbout.triggered.connect(self.aboutWindow)
         self.menuFile.addAction(self.actionSettings)
         self.menuFile.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -72,6 +74,12 @@ class Ui_MainWindow(object):
     def modelSettings(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_Model_Settings()                
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def aboutWindow(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_About()                
         self.ui.setupUi(self.window)
         self.window.show()
 
