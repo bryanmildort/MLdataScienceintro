@@ -1,11 +1,22 @@
 from pandas_datareader import data
-from datetime import date
+from datetime import date, datetime
+import numpy as np
 
-from dateArrange import *
+#from dateArrange import *
 
 startdate = '2017-01-01'
 today = date.today().strftime("%Y-%m-%d") 
 enddate = today
+
+def dateArrange(data):
+    dates = data['Date'].to_list()
+    epochDates = []
+    for i in dates:
+        date_time = np.datetime64(i).astype(datetime)
+        splitDate = date_time.strftime("%Y-%#m-%d").split('-')
+        epochDate = datetime(int(splitDate[0]),int(splitDate[1]),int(splitDate[2]),0,0).timestamp()
+        epochDates.append(epochDate)
+    data['Date'] = epochDates
 
 def dataScraper(ticker):
     panel_data = data.DataReader(ticker, 'yahoo', startdate, enddate).reset_index()

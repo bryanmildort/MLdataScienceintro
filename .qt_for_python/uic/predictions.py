@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\bryan\PythonScripts\MLdataScienceintro\Stock Price Predictor\predictions.ui'
+# Form implementation generated from reading ui file 'c:\Users\bryan\PythonScripts\NBA Analysis\MLdataScienceintro\Stock Price Predictor\Ui Files\predictions.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
