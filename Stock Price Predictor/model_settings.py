@@ -81,7 +81,7 @@ class Ui_Model_Settings(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Model Settings"))
         self.label.setText(_translate("MainWindow", "Model:"))
         self.comboBox.setItemText(0, _translate("MainWindow", "Lasso"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "Test"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "ElasticNet"))
         self.label_2.setText(_translate("MainWindow", "Max Iterations:"))
         self.lineEdit.setText(str(lasso_settings['default_iter']))
         self.pushButton.setText(_translate("MainWindow", "Done"))
@@ -94,8 +94,7 @@ class Ui_Model_Settings(object):
         self.lineEdit_2.setText(str(lasso_settings['alpha']))
         self.lineEdit_3.setText(str(lasso_settings['tol']))
         self.comboBox.currentTextChanged.connect(self.model_change) # selecting new model
-        if model_selection[0] == 'Test':
-            self.comboBox.setCurrentText('Test')
+        self.comboBox.setCurrentText(model_selection[0])
 
     def model_change(self):
         _translate = QtCore.QCoreApplication.translate
@@ -111,7 +110,7 @@ class Ui_Model_Settings(object):
             self.gridLayout.addWidget(self.lineEdit_3, 3, 1, 1, 1)
             self.label_4.setText(_translate("MainWindow", "Tolerance:"))
             self.lineEdit_3.setText(str(lasso_settings['tol']))
-        if model_selection[0] == 'Test':
+        if model_selection[0] == 'ElasticNet':
             self.lineEdit_3.deleteLater()
             self.label_4.deleteLater()
     
@@ -125,8 +124,8 @@ class Ui_Model_Settings(object):
             lasso_settings['tol'] = self.lineEdit_3.text()
             model_selection[0] == 'Lasso'
             self.settingsapplied()
-        if model_selection[0] == 'Test':
-            model_selection[0] == 'Test'
+        if model_selection[0] == 'ElasticNet':
+            model_selection[0] == 'ElasticNet'
             self.settingsapplied()
 
         #print(self.comboBox.currentText()) # read combobox selection

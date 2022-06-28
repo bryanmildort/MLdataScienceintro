@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
             self.ui = Ui_Model_Settings()
             self.ui.setupUi(self.window)
             self.window.show()
-        if model_selection[0] == 'Test':
+        if model_selection[0] == 'ElasticNet':
             self.window = QtWidgets.QMainWindow()
             self.ui = Ui_Model_Settings()
             self.ui.setupUi(self.window)
