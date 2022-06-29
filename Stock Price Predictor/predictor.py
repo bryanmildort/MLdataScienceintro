@@ -14,7 +14,7 @@ prediction_list = []
 typed_ticker = [] 
 
 def predictor(stock_ticker):
-    global prediction_list, ticker, lasso_settings, elastic_settings, today, current_time
+    global prediction_list, ticker, lasso_settings, elastic_settings, today
     
     prediction_list = []
     ticker = stock_ticker
@@ -81,5 +81,6 @@ def predictor(stock_ticker):
             prediction = y_pred_enet.predict(np.array(sample))
             prediction_list.append(prediction)
             #print(i + ' - ' + str(prediction) + '\n')
-    
+            
+    current_time = datetime.now().strftime("%H:%M:%S")
     addDatatoDB(today, current_time, ticker, prediction_list)
