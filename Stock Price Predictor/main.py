@@ -2,6 +2,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from predictions import Ui_Predictions
+from history import Ui_History
 from model_settings import *
 from about import *
 from predictor import *
@@ -47,7 +48,11 @@ class Ui_MainWindow(object):
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
         self.actionAbout.triggered.connect(self.aboutWindow)
+        self.actionHistory = QtWidgets.QAction(MainWindow)
+        self.actionHistory.setObjectName("actionHistory")
+        self.actionHistory.triggered.connect(self.openHistory)
         self.menuFile.addAction(self.actionSettings)
+        self.menuFile.addAction(self.actionHistory)
         self.menuFile.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
         self.pushButton.clicked.connect(self.predict) # adding function to Predict! button
@@ -76,14 +81,22 @@ class Ui_MainWindow(object):
         self.ui.setupUi(self.window)
         self.window.show()
 
+    def openHistory(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_History()                
+        self.ui.setupUi(self.window)
+        self.window.show()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Price Predictor"))
         self.label.setText(_translate("MainWindow", "Enter Ticker To Scrape:"))
         self.pushButton.setText(_translate("MainWindow", "Predict!"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.actionSettings.setText(_translate("MainWindow", "Model"))
+        self.actionSettings.setText(_translate("MainWindow", "Model Settings"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
+        self.actionHistory.setText(_translate("MainWindow", "History"))
+
 
 
 if __name__ == "__main__":

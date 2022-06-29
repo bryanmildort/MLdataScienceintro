@@ -2,11 +2,22 @@ from pandas_datareader import data
 from datetime import date, datetime
 import numpy as np
 
-#from dateArrange import *
-
-startdate = '2017-01-01'
+current_time = datetime.now().strftime("%H:%M:%S")
+startdate = '2012-01-01'
 today = date.today().strftime("%Y-%m-%d") 
 enddate = today
+
+def addDatatoDB(date, time, ticker, predictions):
+    import sqlite3, os.path
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(BASE_DIR, "history.db")
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    query = """INSERT INTO RESULTS (Date, Time, Ticker, High, Low, Close) VALUES (?, ?, ?, ?, ?, ?)"""
+    data_tuple = (date, time, str(ticker).upper(), float(predictions[0]), float(predictions[1]), float(predictions[2]))
+    cursor.execute(query, data_tuple)
+    conn.commit()
+    cursor.close()
 
 def dateArrange(data):
     dates = data['Date'].to_list()

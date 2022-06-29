@@ -14,7 +14,7 @@ prediction_list = []
 typed_ticker = [] 
 
 def predictor(stock_ticker):
-    global prediction_list, ticker, lasso_settings, elastic_settings
+    global prediction_list, ticker, lasso_settings, elastic_settings, today, current_time
     
     prediction_list = []
     ticker = stock_ticker
@@ -38,7 +38,7 @@ def predictor(stock_ticker):
         y = {
             'High' : stock_data.iloc[1: , :]['High'], 
             'Low' : stock_data.iloc[1: , :]['Low'], 
-            'Close (Adjusted)': stock_data.iloc[1: , :]['Adj Close']
+            'Close (Adjusted)': stock_data.iloc[1: , :]['Close']
         }
         sample = stock_data.iloc[-1:, :]
 
@@ -69,7 +69,7 @@ def predictor(stock_ticker):
         y = {
             'High' : stock_data.iloc[1: , :]['High'], 
             'Low' : stock_data.iloc[1: , :]['Low'], 
-            'Close (Adjusted)': stock_data.iloc[1: , :]['Adj Close']
+            'Close (Adjusted)': stock_data.iloc[1: , :]['Close']
         }
         sample = stock_data.iloc[-1:, :]
 
@@ -81,3 +81,5 @@ def predictor(stock_ticker):
             prediction = y_pred_enet.predict(np.array(sample))
             prediction_list.append(prediction)
             #print(i + ' - ' + str(prediction) + '\n')
+    
+    addDatatoDB(today, current_time, ticker, prediction_list)
