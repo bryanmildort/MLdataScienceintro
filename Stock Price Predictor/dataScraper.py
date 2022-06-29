@@ -2,7 +2,6 @@ from pandas_datareader import data
 from datetime import date, datetime
 import numpy as np
 
-current_time = datetime.now().strftime("%H:%M:%S")
 startdate = '2012-01-01'
 today = date.today().strftime("%Y-%m-%d") 
 enddate = today
