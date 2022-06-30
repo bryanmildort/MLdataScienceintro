@@ -14,7 +14,7 @@ prediction_list = []
 typed_ticker = [] 
 
 def predictor(stock_ticker):
-    global prediction_list, ticker, lasso_settings, elastic_settings, today
+    global prediction_list, ticker, lasso_settings, elastic_settings
     
     prediction_list = []
     ticker = stock_ticker
@@ -50,7 +50,8 @@ def predictor(stock_ticker):
             prediction = y_pred_lasso.predict(np.array(sample))
             prediction_list.append(prediction)
             #print(i + ' - ' + str(prediction) + '\n')
-
+        prediction_list.append(lasso)
+        prediction_list.append(r2_score_lasso)
     if model_selection[0] == 'ElasticNet':
         from sklearn.linear_model import ElasticNet
         alpha = float(elastic_settings['alpha'])
@@ -81,6 +82,9 @@ def predictor(stock_ticker):
             prediction = y_pred_enet.predict(np.array(sample))
             prediction_list.append(prediction)
             #print(i + ' - ' + str(prediction) + '\n')
-            
+        prediction_list.append(enet)
+        prediction_list.append(r2_score_enet)
+    
+    today = date.today().strftime("%Y-%m-%d") 
     current_time = datetime.now().strftime("%H:%M:%S")
     addDatatoDB(today, current_time, ticker, prediction_list)

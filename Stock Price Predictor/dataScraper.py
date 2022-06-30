@@ -12,8 +12,8 @@ def addDatatoDB(date, time, ticker, predictions):
     db_path = os.path.join(BASE_DIR, "history.db")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    query = """INSERT INTO RESULTS (Date, Time, Ticker, High, Low, Close) VALUES (?, ?, ?, ?, ?, ?)"""
-    data_tuple = (date, time, str(ticker).upper(), float(predictions[0]), float(predictions[1]), float(predictions[2]))
+    query = """INSERT INTO RESULTS (Date, Time, Ticker, High, Low, Close, Model, R2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+    data_tuple = (date, time, str(ticker).upper(), float(predictions[0]), float(predictions[1]), float(predictions[2]), str(predictions[3]), float(predictions[4]))
     cursor.execute(query, data_tuple)
     conn.commit()
     cursor.close()
