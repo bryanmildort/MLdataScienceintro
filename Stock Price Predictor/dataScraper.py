@@ -14,7 +14,22 @@ def addDatatoDB(date, time, ticker, predictions):
     cursor = conn.cursor()
     query = """INSERT INTO RESULTS (Date, Time, Ticker, High, Low, Close, Model, R2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
     data_tuple = (date, time, str(ticker).upper(), float(predictions[0]), float(predictions[1]), float(predictions[2]), str(predictions[3]), float(predictions[4]))
-    cursor.execute(query, data_tuple)
+    try:
+        cursor.execute(query, data_tuple)
+    except:
+        print('Creating Database Tables')
+        cursor.execute("""CREATE TABLE RESULTS (
+        Date   DATE,
+        Time   TIME,
+        Ticker VARCHAR,
+        High   REAL,
+        Low    REAL,
+        Close  REAL,
+        Model  VARCHAR,
+        R2     REAL)""")
+        conn.commit()
+        cursor.execute(query, data_tuple)
+
     conn.commit()
     cursor.close()
 
