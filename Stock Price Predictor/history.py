@@ -79,8 +79,21 @@ class Ui_History(object):
         db_path = os.path.join(BASE_DIR, "history.db")
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
+        try:
+            cursor.execute('''SELECT * FROM RESULTS''')
+        except:
+            print('Creating Database Tables')
+            cursor.execute("""CREATE TABLE RESULTS (
+            Date   DATE,
+            Time   TIME,
+            Ticker VARCHAR,
+            High   REAL,
+            Low    REAL,
+            Close  REAL,
+            Model  VARCHAR,
+            R2     REAL)""")
+            conn.commit()
 
-        cursor.execute('''SELECT * FROM RESULTS''')
         rows = cursor.fetchall()
 
         for row in rows:
