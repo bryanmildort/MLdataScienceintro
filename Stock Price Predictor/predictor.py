@@ -15,7 +15,7 @@ prediction_list = []
 typed_ticker = [] 
 
 def predictor(stock_ticker):
-    global prediction_list, ticker, lasso_settings, elastic_settings
+    global prediction_list, ticker, lasso_settings, enet_settings
     
     prediction_list = []
     ticker = stock_ticker
@@ -31,7 +31,7 @@ def predictor(stock_ticker):
         from sklearn.linear_model import Lasso
         alpha = float(lasso_settings['alpha'])
         tol = float(lasso_settings['tol'])
-        max_iter = int(lasso_settings['default_iter'])
+        max_iter = int(lasso_settings['max_iter'])
         lasso = Lasso(alpha=alpha, max_iter=max_iter, tol=tol)
 
         test_size = 0.1
@@ -60,10 +60,10 @@ def predictor(stock_ticker):
         prediction_list.append(r2_score_lasso)
     if model_selection[0] == 'ElasticNet':
         from sklearn.linear_model import ElasticNet
-        alpha = float(elastic_settings['alpha'])
-        tol = float(elastic_settings['tol'])
-        max_iter = int(elastic_settings['default_iter'])
-        l1_ratio = float(elastic_settings['l1_ratio'])
+        alpha = float(enet_settings['alpha'])
+        tol = float(enet_settings['tol'])
+        max_iter = int(enet_settings['max_iter'])
+        l1_ratio = float(enet_settings['l1_ratio'])
         enet = ElasticNet(alpha=alpha, tol=tol, max_iter=max_iter, l1_ratio=l1_ratio)
 
         test_size = 0.1

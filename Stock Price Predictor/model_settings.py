@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
+from doctest import FAIL_FAST
 from PyQt5 import QtCore, QtGui, QtWidgets
-from settings_applied import Ui_SettingsApplied
+from settings_applied import *
+from invalid_settings import *
+import sqlite3, os.path, sys
 
 lasso_settings = {
-    'default_iter': 1000,
+    'max_iter': 1000,
     'alpha': 0.1,
     'tol': 0.0017
 }
 
-elastic_settings = {
-    'default_iter': 1000,
+enet_settings = {
+    'max_iter': 1000,
     'alpha': 0.1,
     'tol': 0.0017,
     'l1_ratio': 0.7
@@ -84,7 +87,7 @@ class Ui_Model_Settings(object):
         self.comboBox.setItemText(0, _translate("MainWindow", "Lasso"))
         self.comboBox.setItemText(1, _translate("MainWindow", "ElasticNet"))
         self.label_2.setText(_translate("MainWindow", "Max Iterations:"))
-        self.lineEdit.setText(str(lasso_settings['default_iter']))
+        self.lineEdit.setText(str(lasso_settings['max_iter']))
         self.pushButton.clicked.connect(self.apply_settings) # apply settings
         MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) # Modal always on top
         self.label_3.setText(_translate("MainWindow", "Alpha:"))
@@ -92,7 +95,7 @@ class Ui_Model_Settings(object):
         self.pushButton.setText(_translate("MainWindow", "Apply"))
 
         if model_selection[0] == 'Lasso':
-            self.lineEdit.setText(str(lasso_settings['default_iter']))
+            self.lineEdit.setText(str(lasso_settings['max_iter']))
             self.lineEdit_2.setText(str(lasso_settings['alpha']))
             self.lineEdit_3.setText(str(lasso_settings['tol']))
 
@@ -107,13 +110,13 @@ class Ui_Model_Settings(object):
             self.lineEdit_4.setObjectName("lineEdit_4")
             self.gridLayout.addWidget(self.lineEdit_4, 4, 1, 1, 1)
             self.label_5.setText(_translate("MainWindow", "L1 Ratio"))
-            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+            self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
             self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
             self.pushButton.setText(_translate("MainWindow", "Apply"))
-            self.lineEdit.setText(str(elastic_settings['default_iter']))
-            self.lineEdit_2.setText(str(elastic_settings['alpha']))
-            self.lineEdit_3.setText(str(elastic_settings['tol']))
-            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+            self.lineEdit.setText(str(enet_settings['max_iter']))
+            self.lineEdit_2.setText(str(enet_settings['alpha']))
+            self.lineEdit_3.setText(str(enet_settings['tol']))
+            self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
         
         self.comboBox.currentTextChanged.connect(self.model_change) # trigger from selecting new model
 
@@ -122,7 +125,7 @@ class Ui_Model_Settings(object):
         global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
         if model_selection[0] == 'Lasso':
-            self.lineEdit.setText(str(lasso_settings["default_iter"]))
+            self.lineEdit.setText(str(lasso_settings["max_iter"]))
             self.lineEdit_2.setText(str(lasso_settings['alpha']))
             self.lineEdit_3.setText(str(lasso_settings['tol']))
             self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
@@ -132,9 +135,9 @@ class Ui_Model_Settings(object):
                 self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
                 self.pushButton.setText(_translate("MainWindow", "Apply"))
         if model_selection[0] == 'ElasticNet':
-            self.lineEdit.setText(str(elastic_settings["default_iter"]))
-            self.lineEdit_2.setText(str(elastic_settings['alpha']))
-            self.lineEdit_3.setText(str(elastic_settings['tol']))
+            self.lineEdit.setText(str(enet_settings["max_iter"]))
+            self.lineEdit_2.setText(str(enet_settings['alpha']))
+            self.lineEdit_3.setText(str(enet_settings['tol']))
             self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
             self.label_5 = QtWidgets.QLabel(self.centralwidget)
             self.label_5.setObjectName("label_5")
@@ -144,33 +147,58 @@ class Ui_Model_Settings(object):
             self.lineEdit_4.setObjectName("lineEdit_4")
             self.gridLayout.addWidget(self.lineEdit_4, 4, 1, 1, 1)
             self.label_5.setText(_translate("MainWindow", "L1 Ratio"))
-            self.lineEdit_4.setText(str(elastic_settings['l1_ratio']))
+            self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
             self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
             self.pushButton.setText(_translate("MainWindow", "Apply"))
 
     
     def apply_settings(self):
-        global model_selection
+        global model_selection, lasso_settings, enet_settings
         model_selection[0] = self.comboBox.currentText() # current model selection #######
-        if model_selection[0] == 'Lasso':        
-            global lasso_settings
-            lasso_settings['default_iter'] = self.lineEdit.text()
+        if model_selection[0] == 'Lasso':
+            default_settings = lasso_settings.copy()       
+            lasso_settings['max_iter'] = self.lineEdit.text()
             lasso_settings['alpha'] = self.lineEdit_2.text()
             lasso_settings['tol'] = self.lineEdit_3.text()
             model_selection[0] == 'Lasso'
-            self.settingsapplied()
-        if model_selection[0] == 'ElasticNet':
-            global elastic_settings
-            elastic_settings['default_iter'] = self.lineEdit.text()
-            elastic_settings['alpha'] = self.lineEdit_2.text()
-            elastic_settings['tol'] = self.lineEdit_3.text()
-            elastic_settings['l1_ratio'] = self.lineEdit_4.text()
+            try:
+                from sklearn.linear_model import Lasso
+                Lasso(alpha=float(lasso_settings['alpha']),
+                max_iter=int(lasso_settings['max_iter']),
+                tol=float(lasso_settings['tol']))
+                self.settingsapplied()
+            except:
+                self.invalidSettings()
+                lasso_settings = {}
+                lasso_settings = default_settings.copy()
+        elif model_selection[0] == 'ElasticNet':
+            default_settings = enet_settings.copy()
+            enet_settings['max_iter'] = self.lineEdit.text()
+            enet_settings['alpha'] = self.lineEdit_2.text()
+            enet_settings['tol'] = self.lineEdit_3.text()
+            enet_settings['l1_ratio'] = self.lineEdit_4.text()
             model_selection[0] == 'ElasticNet'
-            self.settingsapplied()
+            try:
+                from sklearn.linear_model import ElasticNet
+                ElasticNet(alpha=float(enet_settings["alpha"]),
+                tol=float(enet_settings["tol"]),
+                max_iter=int(enet_settings["max_iter"]),
+                l1_ratio=float(enet_settings["l1_ratio"]))
+                self.settingsapplied()
+            except:
+                self.invalidSettings()
+                enet_settings = {}
+                enet_settings = default_settings.copy()
 
     def settingsapplied(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_SettingsApplied()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def invalidSettings(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_InvalidSettings()
         self.ui.setupUi(self.window)
         self.window.show()
         

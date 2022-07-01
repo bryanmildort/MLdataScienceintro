@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Ui Files\settings_applied.ui'
+# Form implementation generated from reading ui file 'c:\Users\bryan\PythonScripts\NBA Analysis\MLdataScienceintro\Stock Price Predictor\Ui Files\invalid_settings.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_SettingsApplied(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(170, 103)
@@ -31,17 +31,6 @@ class Ui_SettingsApplied(object):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(18, 189, 0))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(18, 189, 0))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(120, 120, 120))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
-        self.label.setPalette(palette)
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(True)
@@ -57,8 +46,6 @@ class Ui_SettingsApplied(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) # Modal always on top
-
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -66,4 +53,4 @@ class Ui_SettingsApplied(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Settings Applied!"))
+        self.label.setText(_translate("MainWindow", "Invalid Settings"))

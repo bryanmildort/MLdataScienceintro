@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from venv import create
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sqlite3, os.path, sys
 
 
 class Ui_History(object):
@@ -31,6 +33,7 @@ class Ui_History(object):
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionClear_History)
         self.menubar.addAction(self.menuFile.menuAction())
+        MainWindow.setWindowModality(QtCore.Qt.ApplicationModal) # Modal always on top
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -44,7 +47,6 @@ class Ui_History(object):
         self.actionClear_History.setText(_translate("MainWindow", "Clear History"))
     
     def clear_history(self):
-        import sqlite3, os.path, sys
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, "history.db")
         conn = sqlite3.connect(db_path)
@@ -73,26 +75,14 @@ class Ui_History(object):
         self.tableWidget.setColumnWidth(7, 160)
         self.tableWidget.setRowCount(0)
         self.gridLayout.addWidget(self.tableWidget, 0, 0, 1, 1)
-
-        import sqlite3, os.path
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, "history.db")
-        conn = sqlite3.connect(db_path)
+        
+        from dataScraper import connectDB, createDB
+        conn = connectDB()
         cursor = conn.cursor()
         try:
             cursor.execute('''SELECT * FROM RESULTS''')
         except:
-            print('Creating Database Tables')
-            cursor.execute("""CREATE TABLE RESULTS (
-            Date   DATE,
-            Time   TIME,
-            Ticker VARCHAR,
-            High   REAL,
-            Low    REAL,
-            Close  REAL,
-            Model  VARCHAR,
-            R2     REAL)""")
-            conn.commit()
+            createDB()
 
         rows = cursor.fetchall()
 

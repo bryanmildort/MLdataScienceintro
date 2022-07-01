@@ -1,33 +1,49 @@
 from pandas_datareader import data
 from datetime import date, datetime
 import numpy as np
+import sqlite3, os.path
 
 startdate = '2012-01-01'
 today = date.today().strftime("%Y-%m-%d") 
 enddate = today
 
-def addDatatoDB(date, time, ticker, predictions):
-    import sqlite3, os.path
+def connectDB():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(BASE_DIR, "history.db")
     conn = sqlite3.connect(db_path)
+    return conn
+
+def createDB():
+    conn = connectDB()
+    cursor = conn.cursor()
+    print('Creating Database Tables')
+    cursor.execute("""CREATE TABLE RESULTS (
+    Date   DATE,
+    Time   TIME,
+    Ticker VARCHAR,
+    High   REAL,
+    Low    REAL,
+    Close  REAL,
+    Model  VARCHAR,
+    R2     REAL)""")
+    conn.commit()
+    cursor.execute("""CREATE TABLE MODEL_SETTINGS (
+    Model    VARCHAR,
+    max_iter INTEGER,
+    alpha    REAL,
+    tol      REAL,
+    l1_ratio REAL)""")
+    conn.commit()
+
+def addDatatoDB(date, time, ticker, predictions):
+    conn = connectDB()
     cursor = conn.cursor()
     query = """INSERT INTO RESULTS (Date, Time, Ticker, High, Low, Close, Model, R2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
     data_tuple = (date, time, str(ticker).upper(), float(predictions[0]), float(predictions[1]), float(predictions[2]), str(predictions[3]), float(predictions[4]))
     try:
         cursor.execute(query, data_tuple)
     except:
-        print('Creating Database Tables')
-        cursor.execute("""CREATE TABLE RESULTS (
-        Date   DATE,
-        Time   TIME,
-        Ticker VARCHAR,
-        High   REAL,
-        Low    REAL,
-        Close  REAL,
-        Model  VARCHAR,
-        R2     REAL)""")
-        conn.commit()
+        createDB()
         cursor.execute(query, data_tuple)
 
     conn.commit()
