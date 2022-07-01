@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-
-from doctest import FAIL_FAST
 from PyQt5 import QtCore, QtGui, QtWidgets
 from settings_applied import *
 from invalid_settings import *
 import sqlite3, os.path, sys
+from dataScraper import createDB, connectDB
 
 lasso_settings = {
     'max_iter': 1000,
@@ -22,7 +21,7 @@ enet_settings = {
 
 model_selection = ['Lasso']
 
-class Ui_Model_Settings(object):  
+class Ui_Model_Settings(object): 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(270, 206)
@@ -78,9 +77,26 @@ class Ui_Model_Settings(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def defaultSettings(self):
+        conn = connectDB()
+        cursor = conn.cursor() 
+        cursor.execute("""DELETE FROM MODEL_SETTINGS""")
+        conn.commit()
+        query = """INSERT INTO MODEL_SETTINGS (Model, max_iter, alpha, tol) VALUES (?, ?, ?, ?)"""
+        default_lasso = ('Lasso', int(1000), float(0.1), float(0.0017))
+        try:
+            cursor.execute(query, default_lasso)
+        except:
+            createDB()
+            cursor.execute(query, default_lasso)
+        conn.commit()
+        query = """INSERT INTO MODEL_SETTINGS (Model, max_iter, alpha, tol, l1_ratio) VALUES (?, ?, ?, ?, ?)"""
+        default_enet = ('ElasticNet', int(1000), float(0.1), float(0.0017), float(0.7))
+        cursor.execute(query, default_enet)
+        conn.commit()
+        cursor.close()
 
     def retranslateUi(self, MainWindow):
-        global lasso_settings
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Model Settings"))
         self.label.setText(_translate("MainWindow", "Model:"))
@@ -94,13 +110,19 @@ class Ui_Model_Settings(object):
         self.label_4.setText(_translate("MainWindow", "Tolerance:"))
         self.pushButton.setText(_translate("MainWindow", "Apply"))
 
+        conn = connectDB()
+        cursor = conn.cursor() 
         if model_selection[0] == 'Lasso':
-            self.lineEdit.setText(str(lasso_settings['max_iter']))
-            self.lineEdit_2.setText(str(lasso_settings['alpha']))
-            self.lineEdit_3.setText(str(lasso_settings['tol']))
-
+            cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'Lasso'""")
+            row = cursor.fetchone()
+            self.comboBox.setCurrentText('Lasso')
+            self.lineEdit.setText(str(row[1]))
+            self.lineEdit_2.setText(str(row[2]))
+            self.lineEdit_3.setText(str(row[3]))
 
         if model_selection[0] == 'ElasticNet':
+            cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'ElasticNet'""")
+            row = cursor.fetchone()
             self.comboBox.setCurrentText('ElasticNet')
             self.label_5 = QtWidgets.QLabel(self.centralwidget)
             self.label_5.setObjectName("label_5")
@@ -113,21 +135,26 @@ class Ui_Model_Settings(object):
             self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
             self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
             self.pushButton.setText(_translate("MainWindow", "Apply"))
-            self.lineEdit.setText(str(enet_settings['max_iter']))
-            self.lineEdit_2.setText(str(enet_settings['alpha']))
-            self.lineEdit_3.setText(str(enet_settings['tol']))
-            self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
-        
+            self.lineEdit.setText(str(row[1]))
+            self.lineEdit_2.setText(str(row[2]))
+            self.lineEdit_3.setText(str(row[3]))
+            self.lineEdit_4.setText(str(row[4]))
+
         self.comboBox.currentTextChanged.connect(self.model_change) # trigger from selecting new model
 
     def model_change(self):
         _translate = QtCore.QCoreApplication.translate
         global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
+        
+        conn = connectDB()
+        cursor = conn.cursor() 
         if model_selection[0] == 'Lasso':
-            self.lineEdit.setText(str(lasso_settings["max_iter"]))
-            self.lineEdit_2.setText(str(lasso_settings['alpha']))
-            self.lineEdit_3.setText(str(lasso_settings['tol']))
+            cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'Lasso'""")
+            row = cursor.fetchone()
+            self.lineEdit.setText(str(row[1]))
+            self.lineEdit_2.setText(str(row[2]))
+            self.lineEdit_3.setText(str(row[3]))
             self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
             if self.lineEdit_4.isVisible():
                 self.lineEdit_4.deleteLater()
@@ -135,9 +162,11 @@ class Ui_Model_Settings(object):
                 self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
                 self.pushButton.setText(_translate("MainWindow", "Apply"))
         if model_selection[0] == 'ElasticNet':
-            self.lineEdit.setText(str(enet_settings["max_iter"]))
-            self.lineEdit_2.setText(str(enet_settings['alpha']))
-            self.lineEdit_3.setText(str(enet_settings['tol']))
+            cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'ElasticNet'""")
+            row = cursor.fetchone()
+            self.lineEdit.setText(str(row[1]))
+            self.lineEdit_2.setText(str(row[2]))
+            self.lineEdit_3.setText(str(row[3]))
             self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
             self.label_5 = QtWidgets.QLabel(self.centralwidget)
             self.label_5.setObjectName("label_5")
@@ -147,48 +176,57 @@ class Ui_Model_Settings(object):
             self.lineEdit_4.setObjectName("lineEdit_4")
             self.gridLayout.addWidget(self.lineEdit_4, 4, 1, 1, 1)
             self.label_5.setText(_translate("MainWindow", "L1 Ratio"))
-            self.lineEdit_4.setText(str(enet_settings['l1_ratio']))
+            self.lineEdit_4.setText(str(row[4]))
             self.gridLayout.addWidget(self.pushButton, 5, 1, 1, 1)
-            self.pushButton.setText(_translate("MainWindow", "Apply"))
+            self.pushButton.setText(_translate("MainWindow", "Apply"))         
 
-    
     def apply_settings(self):
-        global model_selection, lasso_settings, enet_settings
+        global model_selection
         model_selection[0] = self.comboBox.currentText() # current model selection #######
-        if model_selection[0] == 'Lasso':
-            default_settings = lasso_settings.copy()       
-            lasso_settings['max_iter'] = self.lineEdit.text()
-            lasso_settings['alpha'] = self.lineEdit_2.text()
-            lasso_settings['tol'] = self.lineEdit_3.text()
-            model_selection[0] == 'Lasso'
+        
+        conn = connectDB()
+        cursor = conn.cursor() 
+        if model_selection[0] == 'Lasso': 
+            data_tuple = (self.lineEdit.text(), self.lineEdit_2.text(), self.lineEdit_3.text())      
             try:
+                model_selection[0] = 'Lasso'
+                cursor.execute("""UPDATE MODEL_SETTINGS SET
+                max_iter = ?,
+                alpha = ?,
+                tol = ?
+                WHERE Model = 'Lasso'""", data_tuple)
+                conn.commit()
+                cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'Lasso'""")
+                row = cursor.fetchone()
                 from sklearn.linear_model import Lasso
-                Lasso(alpha=float(lasso_settings['alpha']),
-                max_iter=int(lasso_settings['max_iter']),
-                tol=float(lasso_settings['tol']))
+                Lasso(alpha=float(row[2]),
+                max_iter=int(row[1]),
+                tol=float(row[3]))
                 self.settingsapplied()
             except:
                 self.invalidSettings()
-                lasso_settings = {}
-                lasso_settings = default_settings.copy()
+
         elif model_selection[0] == 'ElasticNet':
-            default_settings = enet_settings.copy()
-            enet_settings['max_iter'] = self.lineEdit.text()
-            enet_settings['alpha'] = self.lineEdit_2.text()
-            enet_settings['tol'] = self.lineEdit_3.text()
-            enet_settings['l1_ratio'] = self.lineEdit_4.text()
-            model_selection[0] == 'ElasticNet'
+            data_tuple = (self.lineEdit.text(), self.lineEdit_2.text(), self.lineEdit_3.text(), self.lineEdit_4.text())      
             try:
+                model_selection[0] = 'ElasticNet'
+                cursor.execute("""UPDATE MODEL_SETTINGS SET
+                max_iter = ?,
+                alpha = ?,
+                tol = ?,
+                l1_ratio = ?
+                WHERE Model = 'ElasticNet'""", data_tuple)
+                conn.commit()
+                cursor.execute("""SELECT * FROM MODEL_SETTINGS WHERE Model = 'ElasticNet'""")
+                row = cursor.fetchone()
                 from sklearn.linear_model import ElasticNet
-                ElasticNet(alpha=float(enet_settings["alpha"]),
-                tol=float(enet_settings["tol"]),
-                max_iter=int(enet_settings["max_iter"]),
-                l1_ratio=float(enet_settings["l1_ratio"]))
+                ElasticNet(alpha=float(row[2]),
+                tol=float(row[3]),
+                max_iter=int(row[1]),
+                l1_ratio=float(row[4]))
                 self.settingsapplied()
             except:
                 self.invalidSettings()
-                enet_settings = {}
-                enet_settings = default_settings.copy()
 
     def settingsapplied(self):
         self.window = QtWidgets.QMainWindow()

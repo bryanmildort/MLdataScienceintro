@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
         self.pushButton.clicked.connect(self.predict) # adding function to Predict! button
-
+    
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -98,6 +98,8 @@ class Ui_MainWindow(object):
         self.actionSettings.setText(_translate("MainWindow", "Model Settings"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionHistory.setText(_translate("MainWindow", "History"))
+        Ui_Model_Settings.defaultSettings(self)
+
 
 if __name__ == "__main__":
     import sys

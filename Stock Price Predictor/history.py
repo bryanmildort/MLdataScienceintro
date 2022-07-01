@@ -3,6 +3,7 @@
 from venv import create
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sqlite3, os.path, sys
+from dataScraper import connectDB
 
 
 class Ui_History(object):
@@ -47,9 +48,7 @@ class Ui_History(object):
         self.actionClear_History.setText(_translate("MainWindow", "Clear History"))
     
     def clear_history(self):
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, "history.db")
-        conn = sqlite3.connect(db_path)
+        conn = connectDB()
         cursor = conn.cursor()
 
         cursor.execute("""DELETE FROM RESULTS""")
@@ -76,12 +75,12 @@ class Ui_History(object):
         self.tableWidget.setRowCount(0)
         self.gridLayout.addWidget(self.tableWidget, 0, 0, 1, 1)
         
-        from dataScraper import connectDB, createDB
         conn = connectDB()
         cursor = conn.cursor()
         try:
             cursor.execute('''SELECT * FROM RESULTS''')
         except:
+            from dataScraper import createDB
             createDB()
 
         rows = cursor.fetchall()
