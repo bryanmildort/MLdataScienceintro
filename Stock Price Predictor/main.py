@@ -63,7 +63,9 @@ class Ui_MainWindow(object):
     def predict(self): # predict function, LEARN ABOOUT CLASSES@@@
         global ticker
         ticker = self.lineEdit.text()
-        predictor(ticker)
+        predict_end = predictor(ticker)
+        if predict_end == None:
+            return
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_Predictions()
         self.ui.setupUi(self.window)

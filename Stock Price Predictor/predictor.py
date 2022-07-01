@@ -4,6 +4,7 @@
 #import warnings
 #warnings.warn = warn
 
+from types import NoneType
 from dataScraper import *
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
@@ -20,6 +21,11 @@ def predictor(stock_ticker):
     ticker = stock_ticker
     typed_ticker.append(ticker)
     stock_data = dataScraper(stock_ticker)
+    
+    try:
+        stock_data.iat[0,0]
+    except:
+        return
     
     if model_selection[0] == 'Lasso':
         from sklearn.linear_model import Lasso
@@ -88,3 +94,4 @@ def predictor(stock_ticker):
     today = date.today().strftime("%Y-%m-%d") 
     current_time = datetime.now().strftime("%H:%M:%S")
     addDatatoDB(today, current_time, ticker, prediction_list)
+    return True
