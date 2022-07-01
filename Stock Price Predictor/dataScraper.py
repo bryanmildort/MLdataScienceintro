@@ -44,7 +44,11 @@ def dateArrange(data):
     data['Date'] = epochDates
 
 def dataScraper(ticker):
-    panel_data = data.DataReader(ticker, 'yahoo', startdate, enddate).reset_index()
+    try:
+        panel_data = data.DataReader(ticker, 'yahoo', startdate, enddate).reset_index()
+    except:
+        print('Failed to Scrape Stock Data, Check Internet Connection.')
+        return
     price_close = panel_data['Adj Close']
     price_20dma = price_close.rolling(window=20).mean().to_list()[100:] # 20 Day Moving Average
     price_50dma = price_close.rolling(window=50).mean().to_list()[100:] # 50 day
