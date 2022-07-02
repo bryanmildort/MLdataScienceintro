@@ -68,9 +68,9 @@ class Ui_Predictions(object):
     def retranslateUi(self, MainWindow): # predict function, LEARN ABOOUT CLASSES@@@
         from predictor import prediction_list, typed_ticker
         #from main import ticker
-        heading = str(typed_ticker[0]).upper() + ' Next Day Price Predictions'
+        heading = str('Next Day Price Predictions')
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", (str(typed_ticker[0].upper() + " Predictions"))))
+        MainWindow.setWindowTitle(_translate("MainWindow", ("Predictions")))
         self.label_4.setText(_translate("MainWindow", heading))
         self.label.setText(_translate("MainWindow", "High:"))
         self.lineEdit.setText(_translate("MainWindow", str(prediction_list[0])))
