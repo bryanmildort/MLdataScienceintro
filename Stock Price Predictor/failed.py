@@ -56,6 +56,6 @@ class Ui_Failed(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Failed"))
         self.label.setText(_translate("MainWindow", "Failed to Scrape Data"))
         self.label_2.setText(_translate("MainWindow", "Check Internet Connection or for Typos in the Ticker"))

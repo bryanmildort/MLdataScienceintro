@@ -44,5 +44,5 @@ class Ui_InvalidSettings(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "No Changes Made"))
         self.label.setText(_translate("MainWindow", "Invalid Settings"))
