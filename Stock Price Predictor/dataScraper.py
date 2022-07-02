@@ -73,5 +73,4 @@ def dataScraper(ticker):
         dateArrange(panel_data)
         return panel_data
     except:
-        print('Failed to Scrape Stock Data, Check Internet Connection.')
         return

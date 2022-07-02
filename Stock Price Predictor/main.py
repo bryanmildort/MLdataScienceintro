@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 
+print("Loading...")
+import sqlite3, os.path, sys
+from dataScraper import connectDB, createDB
+
+try:
+    conn = connectDB()
+    cursor = conn.cursor()
+    cursor.execute("""SELECT * FROM MODEL_SETTINGS""")
+    cursor.close()
+except:
+    createDB()
+    cursor.close()
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from predictions import Ui_Predictions
 from history import Ui_History
 from model_settings import *
 from about import *
 from predictor import *
+from failed import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -65,9 +79,16 @@ class Ui_MainWindow(object):
         ticker = self.lineEdit.text()
         predict_end = predictor(ticker)
         if predict_end == None:
+            self.failedScrape()
             return
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_Predictions()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def failedScrape(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_Failed()                
         self.ui.setupUi(self.window)
         self.window.show()
 
