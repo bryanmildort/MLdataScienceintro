@@ -78,7 +78,7 @@ class Ui_MainWindow(object):
         global ticker
         ticker = self.lineEdit.text()
         predict_end = predictor(ticker)
-        if predict_end == None:
+        if predict_end is None:
             self.failedScrape()
             return
         self.window = QtWidgets.QMainWindow()
